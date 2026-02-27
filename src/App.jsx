@@ -163,6 +163,17 @@ function App() {
   const [rangeKm, setRangeKm] = useState('100')
   const [usedRangeKm, setUsedRangeKm] = useState(100)
   const [rawJsonDebug, setRawJsonDebug] = useState('')
+  const [email, setEmail] = useState('')
+  const [subscribeMessage, setSubscribeMessage] = useState('')
+
+  // Validation for subscribe button
+  const isValidEmail = (email) => {
+    const trimmed = (email || '').trim()
+    if (!trimmed) return false
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    return emailRegex.test(trimmed)
+  }
+  const canSubscribe = hasSelectedCity && isValidEmail(email)
 
   useEffect(() => {
     if (hasSelectedCity) {
@@ -260,6 +271,25 @@ function App() {
     }
   }
 
+  const handleSubscribe = () => {
+    const trimmed = (email || '').trim()
+    if (!trimmed) {
+      setSubscribeMessage('Please enter an email address.')
+      return
+    }
+
+    // Email format validation (simple RFC 5322 compliant regex)
+    const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/
+    if (!emailRegex.test(trimmed)) {
+      setSubscribeMessage('Please enter a valid email address.')
+      return
+    }
+
+    setSubscribeMessage('Thanks for subscribing!')
+    setEmail('')
+    setTimeout(() => setSubscribeMessage(''), 4000)
+  }
+
   return (
     <div className="page">
       <main>
@@ -277,6 +307,7 @@ function App() {
                     type="text"
                     name="city"
                     placeholder="e.g. Zakopane"
+                    className="subscribe-input"
                     value={city}
                     onChange={(e) => {
                       setCity(e.target.value)
@@ -317,6 +348,7 @@ function App() {
                     min="10"
                     max="300"
                     step="10"
+                    className="subscribe-input"
                     value={rangeKm}
                     onChange={(e) => setRangeKm(e.target.value)}
                   />
@@ -326,6 +358,25 @@ function App() {
               <button className="btn btn-primary" onClick={handleSearch}>
                 {isSearching ? 'Searching…' : 'Search'}
               </button>
+
+              <div className="subscribe-wrapper" style={{ flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', width: '100%', alignItems: 'center' }}>
+                  <input
+                    className="subscribe-input"
+                    type="email"
+                    placeholder="Your email"
+                    aria-label="Email address"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <button className="btn btn-primary" onClick={handleSubscribe} disabled={!canSubscribe}>
+                    Subscribe
+                  </button>
+                  {subscribeMessage && (
+                    <span className="subscribe-inline-message" style={{ marginLeft: '0.8rem', background: '#22c55e', color: '#fff', borderRadius: '0.7rem', padding: '0.45rem 1.1rem', fontSize: '0.98rem', fontWeight: 500, animation: 'fadeout 0.5s 4.5s forwards', whiteSpace: 'nowrap' }}>{subscribeMessage}</span>
+                  )}
+                </div>
+              </div>
             </div>
             {searchError && (
               <p className="conditions-error">{searchError}</p>

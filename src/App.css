@@ -83,6 +83,39 @@
   margin-top: 0.5rem;
 }
 
+.subscribe-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.subscribe-input {
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border-subtle);
+  background: var(--card-bg);
+  font-size: 0.95rem;
+}
+
+.subscribe-message {
+  margin-top: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Make textbox text white across the page and soften placeholders */
+.page input[type="text"],
+.page input[type="email"],
+.page input[type="number"],
+.page textarea {
+  color: #ffffff;
+}
+
+.page input::placeholder,
+.page textarea::placeholder {
+  color: rgba(255, 255, 255, 0.72);
+}
+
 .city-input-wrapper {
   position: relative;
   display: inline-flex;
@@ -253,6 +286,15 @@
   background: linear-gradient(135deg, #4f46e5, #7c3aed);
   color: #f9fafb;
   box-shadow: 0 18px 45px rgba(79, 70, 229, 0.35);
+}
+
+.btn-primary:disabled,
+.btn[disabled] {
+  background: #a1a1aa !important;
+  color: #e5e7eb !important;
+  cursor: not-allowed !important;
+  box-shadow: none !important;
+  opacity: 0.7;
 }
 
 .btn-primary:hover {
